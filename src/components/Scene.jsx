@@ -85,15 +85,16 @@ function CameraRig({ isMobile, resetSignal, entered, reducedMotion }) {
   )
 }
 
-function Lights({ isMobile }) {
+function Lights({ isMobile, nightMode }) {
+  const daylight = nightMode ? 0.62 : 1
   return (
     <>
-      <ambientLight intensity={0.32} color="#fff2fb" />
-      <hemisphereLight args={['#ffe8fb', '#c8dcff', 0.55]} />
+      <ambientLight intensity={0.32 * daylight} color={nightMode ? '#9b9dff' : '#fff2fb'} />
+      <hemisphereLight args={nightMode ? ['#4e4d91', '#171936', 0.5] : ['#ffe8fb', '#c8dcff', 0.55]} />
       <directionalLight
         position={[4.5, 7.5, 4.5]}
-        intensity={1.55}
-        color="#fff5fc"
+        intensity={1.55 * daylight}
+        color={nightMode ? '#aebcff' : '#fff5fc'}
         castShadow
         shadow-mapSize-width={isMobile ? 1024 : 2048}
         shadow-mapSize-height={isMobile ? 1024 : 2048}
@@ -106,11 +107,12 @@ function Lights({ isMobile }) {
         shadow-bias={-0.0005}
         shadow-normalBias={0.03}
       />
-      <directionalLight position={[-5, 4, -3]} intensity={0.8} color="#c9b2ff" />
-      <pointLight position={[0, 2.6, -3.2]} intensity={5} distance={8} decay={2} color="#ffb4e4" />
-      <pointLight position={[3.2, 1.2, 2.2]} intensity={3} distance={5} decay={2} color="#bfe6ff" />
-      <pointLight position={[0.4, 2.2, 5.2]} intensity={2.4} distance={9} decay={2} color="#ffe6f4" />
-      <Environment resolution={64} frames={1} environmentIntensity={0.4}>
+      <directionalLight position={[-5, 4, -3]} intensity={0.8 * daylight} color={nightMode ? '#716dca' : '#c9b2ff'} />
+      <pointLight position={[0, 2.6, -3.2]} intensity={nightMode ? 3.8 : 5} distance={8} decay={2} color={nightMode ? '#8a82ff' : '#ffb4e4'} />
+      <pointLight position={[3.2, 1.2, 2.2]} intensity={nightMode ? 2.2 : 3} distance={5} decay={2} color={nightMode ? '#6cc8ff' : '#bfe6ff'} />
+      <pointLight position={[0.4, 2.2, 5.2]} intensity={nightMode ? 1.8 : 2.4} distance={9} decay={2} color={nightMode ? '#d1b9ff' : '#ffe6f4'} />
+      <pointLight position={[-3.4, 3.5, -2.2]} intensity={nightMode ? 2.8 : 1.1} distance={7} decay={2} color={nightMode ? '#7f8dff' : '#ffd6ef'} />
+      <Environment resolution={64} frames={1} environmentIntensity={nightMode ? 0.24 : 0.4}>
         <Lightformer
           form="rect"
           intensity={3}
@@ -197,6 +199,7 @@ export default function Scene({
   resetSignal,
   isMobile,
   reducedMotion,
+  nightMode,
 }) {
   return (
     <Canvas
@@ -218,7 +221,7 @@ export default function Scene({
       aria-label="Escena 3D interactiva de Luna, la pony alicornio, en un jardín mágico."
     >
       <Suspense fallback={null}>
-        <Lights isMobile={isMobile} />
+        <Lights isMobile={isMobile} nightMode={nightMode} />
         <CameraRig
           isMobile={isMobile}
           resetSignal={resetSignal}

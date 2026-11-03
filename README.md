@@ -62,6 +62,48 @@ src/
 
 El comando `npm run build` genera una aplicación estática en `dist/` lista para subir a cualquier servicio de hosting estático (Vercel, Netlify, GitHub Pages, etc.).
 
+### Vercel
+
+1. Importa este repositorio en Vercel.
+2. Usa `npm install` como comando de instalación.
+3. Usa `npm run build` como comando de build.
+4. Usa `dist` como directorio de salida.
+
+No necesita variables de entorno ni backend: el audio se genera en el navegador y las preferencias se guardan localmente.
+
+> Importante para Windows + WSL: `node_modules` contiene binarios nativos dependientes del sistema. No reutilices la carpeta instalada en Windows dentro de WSL. Si aparece `Cannot find native binding`, ejecuta en WSL:
+
+```bash
+rm -rf node_modules
+npm ci --include=optional
+npm run build
+```
+
+Si WSL responde `EIO` al borrar un archivo `.node` dentro de `/mnt/d`, la carpeta está bloqueada por Windows. Cierra VS Code, Vite y cualquier terminal que esté usando el proyecto; luego abre PowerShell y ejecuta:
+
+```powershell
+Set-Location D:\projects\pony
+Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force
+Remove-Item -LiteralPath .\node_modules -Recurse -Force
+```
+
+Después vuelve a WSL y reinstala:
+
+```bash
+cd /mnt/d/projects/pony
+npm ci --include=optional
+npm run build
+```
+
+Para evitar este tipo de problemas de archivos nativos, la opción más estable es trabajar con el repositorio dentro del sistema de archivos Linux, por ejemplo `~/projects/pony`, en lugar de `/mnt/d`.
+
+En un deploy limpio (Vercel, Netlify o CI) no hace falta este paso: el proveedor crea `node_modules` para su propio sistema operativo.
+
+### Netlify
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+
 ## Créditos
 
 Hecho con polvo de estrellas ✦

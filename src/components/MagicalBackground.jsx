@@ -4,7 +4,7 @@ const fract = (value) => value - Math.floor(value)
 const seeded = (index, salt = 0) =>
   fract(Math.sin(index * 127.1 + salt * 311.7) * 43758.5453)
 
-export default function MagicalBackground() {
+export default function MagicalBackground({ nightMode = false }) {
   const stars = useMemo(
     () =>
       Array.from({ length: 54 }, (_, index) => ({
@@ -31,7 +31,7 @@ export default function MagicalBackground() {
   )
 
   return (
-    <div className="magic-bg" aria-hidden="true">
+    <div className={`magic-bg${nightMode ? ' is-night' : ''}`} aria-hidden="true">
       <div className="bg-gradient" />
       <div className="bg-aurora bg-aurora--pink" />
       <div className="bg-aurora bg-aurora--lilac" />

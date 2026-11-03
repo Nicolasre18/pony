@@ -12,6 +12,7 @@ const UPPER_LEG = new THREE.CapsuleGeometry(0.12, 0.34, 6, 16)
 const LOWER_LEG = new THREE.CapsuleGeometry(0.095, 0.3, 6, 16)
 const NECK = new THREE.CapsuleGeometry(0.32, 0.48, 8, 24)
 const HOOF = new THREE.CylinderGeometry(0.12, 0.138, 0.16, 24)
+const HOOF_BAND = new THREE.TorusGeometry(0.116, 0.014, 8, 20)
 const HORN = new THREE.ConeGeometry(0.1, 0.62, 24, 4)
 const HORN_RING = new THREE.TorusGeometry(1, 0.13, 8, 28)
 const MOUTH = new THREE.TorusGeometry(0.072, 0.011, 8, 28, Math.PI)
@@ -960,7 +961,7 @@ function Necklace({ material }) {
 
 function Wing({ materials }) {
   return (
-    <>
+    <group>
       <mesh geometry={WING} material={materials.wing} />
       <mesh
         geometry={WING}
@@ -968,7 +969,14 @@ function Wing({ materials }) {
         scale={[0.65, 0.62, 1]}
         position={[0.22, 0.02, 0.03]}
       />
-    </>
+      <mesh
+        geometry={WING}
+        material={materials.maneLight}
+        scale={[0.38, 0.42, 1.02]}
+        position={[0.42, 0.02, 0.055]}
+        rotation={[0, 0, -0.08]}
+      />
+    </group>
   )
 }
 
@@ -1073,6 +1081,12 @@ function Leg({ hipRef, kneeRef, position, materials, back = false }) {
           material={materials.hoof}
           position={[0, -0.36, 0.012]}
           castShadow
+        />
+        <mesh
+          geometry={HOOF_BAND}
+          material={materials.gold}
+          position={[0, -0.29, 0.012]}
+          rotation={[Math.PI / 2, 0, 0]}
         />
         {back ? (
           <mesh
@@ -1375,6 +1389,19 @@ export default function Pony({ config, action = 'idle', actionKey = 0, petKey = 
           scale={[0.53, 0.45, 0.48]}
           castShadow
         />
+        {/* Volumen suave del pecho: ayuda a leer mejor la silueta frontal */}
+        <mesh
+          geometry={SPHERE}
+          material={materials.coatLight}
+          position={[0, 0.12, 0.73]}
+          scale={[0.26, 0.17, 0.045]}
+        />
+        <mesh
+          geometry={SPHERE}
+          material={materials.shine}
+          position={[-0.075, 0.17, 0.772]}
+          scale={[0.032, 0.018, 0.008]}
+        />
         {/* Cutie mark: constelación de estrellas */}
         <group position={[0.532, 0.06, -0.08]} rotation={[0, Math.PI / 2, 0]}>
           <mesh geometry={STAR} material={materials.gold} scale={[0.16, 0.16, 0.16]} rotation={[0, 0, 0.15]} />
@@ -1491,6 +1518,12 @@ export default function Pony({ config, action = 'idle', actionKey = 0, petKey = 
           material={materials.line}
           position={[0.082, -0.1, 0.662]}
           scale={[0.02, 0.014, 0.01]}
+        />
+        <mesh
+          geometry={SPHERE}
+          material={materials.shine}
+          position={[0, -0.087, 0.674]}
+          scale={[0.012, 0.006, 0.004]}
         />
         <mesh
           geometry={MOUTH}
@@ -1644,6 +1677,15 @@ export default function Pony({ config, action = 'idle', actionKey = 0, petKey = 
             decay={2}
           />
         </group>
+
+        {/* Pequeño sello estelar en la frente */}
+        <mesh
+          geometry={STAR}
+          material={materials.gold}
+          position={[0, 0.42, 0.515]}
+          scale={[0.045, 0.045, 0.045]}
+          rotation={[0, 0, 0.18]}
+        />
 
         {/* Melena */}
         <Mane config={config} materials={materials} />

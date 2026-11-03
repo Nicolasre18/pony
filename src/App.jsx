@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { MousePointer2, Sparkles } from 'lucide-react'
+import { Moon, MousePointer2, Sparkles, Sun } from 'lucide-react'
 import MagicalBackground from './components/MagicalBackground.jsx'
 import IntroOverlay from './components/IntroOverlay.jsx'
 import Scene from './components/Scene.jsx'
@@ -60,6 +60,7 @@ export default function App() {
   const [petKey, setPetKey] = useState(0)
   const [resetSignal, setResetSignal] = useState(0)
   const [toast, setToast] = useState(null)
+  const [nightMode, setNightMode] = useState(false)
 
   const actionTimer = useRef()
   const toastTimer = useRef()
@@ -184,8 +185,8 @@ export default function App() {
   }
 
   return (
-    <div className={`app${entered ? ' is-entered' : ''}`}>
-      <MagicalBackground />
+    <div className={`app${entered ? ' is-entered' : ''}${nightMode ? ' is-night' : ''}`}>
+      <MagicalBackground nightMode={nightMode} />
 
       {introMounted ? (
         <IntroOverlay
@@ -204,6 +205,18 @@ export default function App() {
         <p className="hero__tagline">Crea, juega y sueña con tu pony alicornio.</p>
       </header>
 
+      <button
+        type="button"
+        className="theme-toggle"
+        onClick={() => setNightMode((value) => !value)}
+        aria-pressed={nightMode}
+        aria-label={nightMode ? 'Activar modo día' : 'Activar modo noche'}
+        title={nightMode ? 'Modo día' : 'Modo noche'}
+      >
+        {nightMode ? <Sun size={17} /> : <Moon size={17} />}
+        <span>{nightMode ? 'Día' : 'Noche'}</span>
+      </button>
+
       <main className="stage-wrap">
         <div className="canvas-layer">
           <Scene
@@ -216,6 +229,7 @@ export default function App() {
             isMobile={isMobile}
             reducedMotion={reducedMotion}
             pageVisible={pageVisible}
+            nightMode={nightMode}
           />
         </div>
 
